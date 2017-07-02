@@ -1,10 +1,21 @@
-import { Component } from '@angular/core';
+/**
+ * Created by jason on 6/30/17.
+ */
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
+import {Component} from '@angular/core';
+
+@Component(
+  {
+    selector: 'app-root',
+    template: `
+      <div class="container">
+        <app-nav-top></app-nav-top>
+        <router-outlet></router-outlet>
+      </div>
+    `
+  }
+)
+
 export class AppComponent {
-  title = 'app';
+
 }

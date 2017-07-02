@@ -1,0 +1,7 @@
+{
+  "/v5/*" :{
+    "target":"http://localhost:8080",
+    "security":false,
+    "logLevel":"debug"
+  }
+}
