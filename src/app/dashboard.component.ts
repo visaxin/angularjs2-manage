@@ -20,10 +20,14 @@ import 'rxjs/add/observable/of';
 export class DashboardComponent implements OnInit {
   repositoryList: Observable<Repository[]> = Observable.of<Repository[]>([]);
   showDelete = false;
+  selectedRepo: Repository;
   private repoNameStream = new Subject<string>();
 
-
   constructor(private repositoryService: RepositoryService) {
+  }
+
+  select(repo: Repository): void {
+    this.selectedRepo = repo;
   }
 
 

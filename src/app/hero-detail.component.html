@@ -1,0 +1,140 @@
+<!--<div>-->
+<!--<form [formGroup]="repoForm">-->
+<!--<label class="center-block">appId:-->
+<!--<input class="form-control"-->
+<!--formControlName="appId">-->
+<!--</label>-->
+
+<!--<label class="center-block">repoName:-->
+<!--<input class="form-control"-->
+<!--formControlName="repoName">-->
+<!--</label>-->
+
+<!--<div formGroupName="schema">-->
+<!--<div class="form-group">-->
+<!--<label class="center-block">Key:-->
+<!--<input class="form-control"-->
+<!--formControlName="key">-->
+<!--</label>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<p>Form value: {{ repoForm.value | json }}</p>-->
+<!--<p>Form status: {{ repoForm.status | json }}</p>-->
+<!--</form>-->
+
+
+<!--<div class="form-group col-md-5">-->
+<!--<label for="comment">Json-->
+<!--Format:</label>-->
+<!--<textarea class="form-control" rows="60"-->
+<!--#repoJson-->
+<!--id="comment">{{repo | json}}</textarea>-->
+<!--<button-->
+<!--(click)="save(repoJson.value)"-->
+<!--class="btn btn-default">提交修改-->
+<!--</button>-->
+<!--</div>-->
+<!--<button class="btn btn-default"-->
+<!--(click)="goBack()">Back-->
+<!--</button>-->
+<!--<button-->
+<!--(click)="save(repoJson.value)"-->
+<!--class="btn btn-default">提交修改-->
+<!--</button>-->
+<!--</div>-->
+
+
+<form [formGroup]="repoForm"
+      (ngSubmit)="onSubmit()"
+      novalidate>
+  <div style="margin-bottom: 1em">
+    <button type="submit"
+            [disabled]="repoForm.pristine"
+            class="btn btn-success">Save
+    </button> &nbsp;
+    <button type="reset" (click)="revert()"
+            [disabled]="repoForm.pristine"
+            class="btn btn-danger">Revert
+    </button>
+  </div>
+
+  <!-- Hero Detail Controls -->
+  <div class="form-group">
+    <label class="center-block">Name:
+      <input class="form-control"
+             formControlName="repoName">
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="center-block">Name:
+      <input class="form-control"
+             formControlName="appID">
+    </label>
+  </div>
+
+  <div class="form-group"
+       formGroupName="producerInfo">
+    <label class="center-block">ProducerInfo:
+      <input class="form-control"
+             formControlName="status">
+    </label>
+  </div>
+
+  <div formArrayName="schema"
+       class="well well-lg">
+    <div
+      *ngFor="let schemaObject of schemaObjects.controls; let i=index"
+      [formGroupName]="i">
+      <h4>Address #{{i + 1}}</h4>
+      <div style="margin-left: 1em;">
+        <div class="form-group">
+          <label class="center-block">Key:
+            <input class="form-control"
+                   formControlName="key">
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="center-block">Valtype:
+            <input class="form-control"
+                   formControlName="valtype">
+          </label>
+        </div>
+        <!--<div class="form-group">-->
+        <!--<label class="center-block">State:-->
+        <!--<select class="form-control" formControlName="state">-->
+        <!--<option *ngFor="let state of states" [value]="state">{{state}}</option>-->
+        <!--</select>-->
+        <!--</label>-->
+        <!--</div>-->
+        <div class="form-group">
+          <label class="center-block">Analyzer:
+            <input class="form-control"
+                   formControlName="analyzer">
+          </label>
+        </div>
+      </div>
+      <br>
+      <!-- End of the repeaschemaObjectress template -->
+    </div>
+    <button (click)="addSchema()"
+            type="button">Add Schema
+    </button>
+  </div>
+
+  <div class="checkbox">
+  </div>
+</form>
+
+<p>repoForm value: {{ repoForm.value | json}}</p>
+
+<h4>Name change log</h4>
+<!--<div *ngFor="let name of nameChangeLog">{{name}}</div>-->
+
+
+<!--
+Copyright 2017 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at http://angular.io/license
+-->

@@ -87,6 +87,10 @@
               <a
                 [routerLink]="['/detail', repo.appID,repo.repoName]"
                 class=" btn">Edit</a>
+              <button
+                class="btn btn-default"
+                (click)="select(repo)">Show
+              </button>
             </span>
           </th>
           <th>{{repo.appID}}</th>
@@ -100,4 +104,8 @@
     </div>
   </div>
 
+  <app-hero-detail
+    [repo]="selectedRepo"></app-hero-detail>
+
 </div>
+
