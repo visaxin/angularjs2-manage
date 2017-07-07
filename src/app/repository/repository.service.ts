@@ -1,6 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Repository, RepositoryList} from '../hero';
-import {Http, Response, URLSearchParams} from '@angular/http';
+import {
+  Repository,
+} from '../hero';
+import {
+  Http,
+  Response,
+  URLSearchParams
+} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -17,7 +23,8 @@ export class RepositoryService {
   }
 
   update(repo: Repository): Observable<Repository> {
-    return this.http.put(this.repoUrl, JSON.stringify(repo)).map(this.extractRepository).catch(this.handleError)
+    const url = `/${APIVersion}/admin/user/repo/${repo.repoName}/${repo.appID}`;
+    return this.http.put(url, JSON.stringify(repo)).map(this.extractRepository).catch(this.handleError)
   }
 
   search(size: string, from: string): Observable<Repository[]> {
@@ -27,8 +34,15 @@ export class RepositoryService {
     return this.http.get(this.repoUrl, {params: params}).map(this.extractRepository).catch(this.handleError)
   }
 
+  searchWithAppIdRepoName(appId: string, repoName: string): Observable<Repository[]> {
+    const params = new URLSearchParams();
+    params.set('appId', appId);
+    params.set('repoName', repoName);
+    return this.http.get(this.repoUrl, {params: params}).map(this.extractRepository).catch(this.handleError)
+  }
+
   // get repositoryList by appid
-  searchWithAppId(appId: string): Observable<RepositoryList> {
+  searchWithAppId(appId: string): Observable<Repository[]> {
     const params = new URLSearchParams();
     params.set('appId', appId);
     return this.http.get(this.repoUrl, {params: params})
@@ -37,7 +51,7 @@ export class RepositoryService {
   }
 
   // get repo by repoName
-  searchWithRepoName(repoName: string): Observable<RepositoryList> {
+  searchWithRepoName(repoName: string): Observable<Repository[]> {
     // const url = '/${APIVersion}/admin/user/repositoryList';
     const params = new URLSearchParams();
     params.set('repoName', repoName);
@@ -47,11 +61,8 @@ export class RepositoryService {
   }
 
   delete(appId: string, repoName: string): Observable<Object> {
-    const params = new URLSearchParams();
-    params.set('appId', appId);
-    params.set('repoName', repoName);
-
-    return this.http.delete(this.repoUrl, {params: params})
+    const url = `/${APIVersion}/admin/user/repo/${repoName}/${appId}`;
+    return this.http.delete(url)
       .map(this.extractRepository)
       .catch(this.handleError);
   }

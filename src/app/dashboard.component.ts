@@ -3,13 +3,14 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Repository, RepositoryList} from './hero';
+import {Repository} from './hero';
 import {RepositoryService} from './repository/repository.service';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 @Component({
   selector: 'app-my-dashboard',
   templateUrl: `./dashboard.component.html`,
@@ -17,37 +18,56 @@ import {Observable} from 'rxjs/Observable';
 })
 
 export class DashboardComponent implements OnInit {
-  repositoryList: Observable<RepositoryList>;
-  repos: Repository[];
-  selectedRepo: Observable<Repository>;
+  repositoryList: Observable<Repository[]> = Observable.of<Repository[]>([]);
+  showDelete = false;
   private repoNameStream = new Subject<string>();
-  private repoAppIdStream = new Subject<string>();
 
 
   constructor(private repositoryService: RepositoryService) {
   }
 
 
-  ngOnInit(): void {
-    this.repositoryList = this.repoNameStream.debounceTime(300).distinctUntilChanged().switchMap((repo: string) => this.repositoryService.searchWithRepoName(repo))
-    this.repositoryList.subscribe(l => this.repos = l.repo_list);
-    this.repoAppIdStream.debounceTime(300).distinctUntilChanged().switchMap((appId: string) => this.repositoryService.searchWithAppId(appId))
-  }
-
   searchRepoWithRepoName(repoName: string) {
     this.repoNameStream.next(repoName)
   }
 
-  searchRepoWithAppId(appId: string) {
-    this.repoAppIdStream.next(appId)
+  search(appId: string, repoName: string): void {
+    if (appId === '') {
+      this.repositoryList = this.repositoryService.searchWithRepoName(repoName);
+      return
+    }
+    if (repoName === '') {
+      this.repositoryList = this.repositoryService.searchWithAppId(appId);
+      return
+    }
+    this.repositoryList = this.repositoryService.searchWithAppIdRepoName(appId, repoName).catch(error => {
+      console.log(error);
+      return Observable.of<Repository[]>([]);
+    });
   }
 
-  deleteCurrentRepo(appId: string, repoName: string) {
-    this.repositoryService.delete(appId, repoName)
+  deleteRepo(appId: string, repoName: string) {
+    if (appId === '' || repoName === '') {
+      return
+    }
+    this.repositoryService.delete(appId, repoName).subscribe();
+    this.showDelete = !this.showDelete;
   }
 
-  updateCurrentRepo() {
+  ngOnInit(): void {
+    this.repositoryList = this.repoNameStream
+      .debounceTime(200)
+      .distinctUntilChanged()
+      .switchMap(term => term
+        ? this.repositoryService.searchWithRepoName(term) : Observable.of<Repository[]>([]))
+      .catch(error => {
+        console.log(error);
+        return Observable.of<Repository>();
+      });
+  }
 
+  deleteButton(): void {
+    this.showDelete = !this.showDelete
   }
 }
 

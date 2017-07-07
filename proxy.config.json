@@ -1,6 +1,6 @@
 {
   "/v5/*" :{
-    "target":"http://localhost:8080",
+    "target":"http://cs20:9177",
     "security":false,
     "logLevel":"debug"
   }

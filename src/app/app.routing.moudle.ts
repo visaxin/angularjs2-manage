@@ -7,7 +7,7 @@ import {NgModule} from '@angular/core';
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   {path: 'dashboard', component: DashboardComponent},
-  {path: 'detail/:id', component: HeroDetailComponent},
+  {path: 'detail/:appId/:repoName', component: HeroDetailComponent},
   {path: 'repositoryList', component: RepositoryComponent}
 ];
 

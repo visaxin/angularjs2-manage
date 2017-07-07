@@ -1,38 +1,56 @@
 /**
  * Created by jason on 6/30/17.
  */
-import {Component, Input, OnInit} from '@angular/core'
+import {
+  Component,
+  Input,
+  OnInit
+} from '@angular/core'
 import {Repository} from './hero';
-import {ActivatedRoute, ParamMap} from '@angular/router'
+import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router'
 import {RepositoryService} from './repository/repository.service';
 import 'rxjs/add/operator/switchMap';
 import {Location} from '@angular/common';
-import {Observable} from 'rxjs/Observable';
 
 @Component(
   {
     selector: 'app-hero-detail',
     template: `
-      <!--<div *ngIf="hero">-->
-      <!--<h2>{{hero.name}} details!</h2>-->
-      <!--<div><label>id: </label>{{hero.id}}</div>-->
-      <!--<div>-->
-      <!--<label>name: </label>-->
-      <!--<input [(ngModel)]="hero.name" placeholder="name"/>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--<button (click)="goBack()">Back</button>-->
+      <div>
+        <div class="form-group col-md-5">
+          <label for="comment">Json
+            Format:</label>
+          <textarea class="form-control" rows="60"
+                    #repoJson
+                    id="comment">{{repo | json}}</textarea>
+          <button
+            (click)="update(repoJson.value)"
+            class="btn btn-default">提交修改
+          </button>
+        </div>
+        <button class="btn btn-default"
+                (click)="goBack()">Back
+        </button>
+        <button
+          (click)="update(repoJson.value)"
+          class="btn btn-default">提交修改
+        </button>
+      </div>
+
     `
   }
 )
 
 export class HeroDetailComponent implements OnInit {
-  @Input() repo: Observable<Repository>;
+  @Input() repo: Repository;
 
   ngOnInit(): void {
-    // this.route.paramMap.switchMap(
-    //   (params: ParamMap) => this.repositoryService.searchWithAppId(+params.get('id'))
-    // ).subscribe(repo => this.repo)
+    this.route.paramMap.switchMap(
+      (params: ParamMap) => this.repositoryService.searchWithAppIdRepoName(params.get('appId'), params.get('repoName'))
+    ).subscribe(repo => this.repo = repo.pop())
   }
 
 
@@ -43,6 +61,12 @@ export class HeroDetailComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  update(repoJson: string): void {
+    const repo = JSON.parse(repoJson);
+    console.log(repo);
+    this.repositoryService.update(repo).subscribe(r => this.repo = r)
   }
 
 }

@@ -1,11 +1,10 @@
 <!--The whole content below can be removed with the new code.-->
 <div style="text-align:center">
   <h1>
-    <div><label>id: </label>{{repo.appId}}</div>
-
+    <div><label>id: </label>{{repo.appID}}</div>
     <ul class="heroes">
       <li *ngFor="let r of repos" (click)="onSelect(r)" [class.selected]="r === selectedRepository">
-        <span class="badge">{{r.appId}}</span> {{r.repoName}}
+        <span class="badge">{{r.appID}}</span> {{r.repoName}}
       </li>
     </ul>
     <div *ngIf="selectedRepository">
